@@ -69,7 +69,7 @@ func (d Delegate) ServicesForSpec(jobSpec job.SpecDB) (services []job.Service, e
 		return nil, errors.Wrap(err, "could not instantiate NewOffchainAggregatorCaller")
 	}
 
-	ocrContract, err := NewOCRContractConfigTracker(
+	ocrContract, err := NewOCRContractTracker(
 		concreteSpec.ContractAddress.Address(),
 		contractFilterer,
 		contractCaller,
@@ -81,6 +81,7 @@ func (d Delegate) ServicesForSpec(jobSpec job.SpecDB) (services []job.Service, e
 	if err != nil {
 		return nil, errors.Wrap(err, "error calling NewOCRContract")
 	}
+	services = append(services, ocrContract)
 
 	peerID, err := d.config.P2PPeerID(concreteSpec.P2PPeerID)
 	if err != nil {
@@ -165,7 +166,10 @@ func (d Delegate) ServicesForSpec(jobSpec job.SpecDB) (services []job.Service, e
 			return nil, err
 		}
 		contractTransmitter := NewOCRContractTransmitter(concreteSpec.ContractAddress.Address(), contractCaller, contractABI,
-			NewTransmitter(db, ta.Address(), d.config.EthGasLimitDefault()))
+			NewTransmitter(db, ta.Address(), d.config.EthGasLimitDefault()),
+			d.logBroadcaster,
+			ocrContract,
+		)
 
 		oracle, err := ocr.NewOracle(ocr.OracleArgs{
 			Database: NewDB(db, concreteSpec.ID),

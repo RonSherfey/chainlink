@@ -44,7 +44,8 @@ require (
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/shopspring/decimal v1.2.0
-	github.com/smartcontractkit/libocr v0.0.0-20210211115835-afc9c01fedfd
+	github.com/smartcontractkit/libocr v0.0.0-20210218213114-38625d5ae789
+	github.com/smartcontractkit/offchain-reporting/lib v0.0.0-20210212173655-49435b7f7657
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tevino/abool v0.0.0-20170917061928-9b9efcf221b5
