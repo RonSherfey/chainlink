@@ -286,7 +286,8 @@ func (t *OCRContractTracker) ConfigFromLogs(ctx context.Context, changedInBlock 
 }
 
 // LatestBlockHeight queries the eth node for the most recent header
-// FIXME: This could (should?) be optimised to use the head tracker
+// TODO(sam): This could (should?) be optimised to use the head tracker
+// https://www.pivotaltracker.com/story/show/177006717
 func (t *OCRContractTracker) LatestBlockHeight(ctx context.Context) (blockheight uint64, err error) {
 	h, err := t.ethClient.HeaderByNumber(ctx, nil)
 	if err != nil {
