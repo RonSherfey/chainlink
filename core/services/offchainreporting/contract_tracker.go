@@ -24,6 +24,12 @@ import (
 	ocrtypes "github.com/smartcontractkit/libocr/offchainreporting/types"
 )
 
+// configMailboxSanityLimit is the maximum number of configs that can be held
+// in the mailbox. Under normal operation there should never be more than 0 or
+// 1 configs in the mailbox, this limit is here merely to prevent unbounded usage
+// in some kind of unforeseen insane situation.
+const configMailboxSanityLimit = 100
+
 var (
 	_ ocrtypes.ContractConfigTracker = &OCRContractTracker{}
 	_ log.Listener                   = &OCRContractTracker{}
@@ -83,7 +89,7 @@ func NewOCRContractTracker(
 		make(chan struct{}),
 		offchainaggregator.OffchainAggregatorRoundRequested{},
 		sync.RWMutex{},
-		*utils.NewMailbox(0),
+		*utils.NewMailbox(configMailboxSanityLimit),
 		make(chan ocrtypes.ContractConfig),
 	}, nil
 }
@@ -95,7 +101,7 @@ func (t *OCRContractTracker) Start() (err error) {
 	}
 	connected := t.logBroadcaster.Register(t.contractAddress, t)
 	if !connected {
-		return errors.New("OCRContractTracker: failed to register with logBroadcaster")
+		t.logger.Warnw("OCRContractTracker#Start: log broadcaster is not connected", "jobID", t.jobID, "address", t.contractAddress)
 	}
 	t.wg.Add(1)
 	go t.processLogs()
