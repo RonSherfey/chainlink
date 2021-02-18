@@ -108,7 +108,7 @@ func (t *OCRContractTracker) Start() (err error) {
 	return nil
 }
 
-// Close should be called when we no longer need TODO
+// Close should be called after teardown of the OCR job relying on this tracker
 func (t *OCRContractTracker) Close() error {
 	if !t.OkayToStop() {
 		return errors.New("OCRContractTracker already stopped")
@@ -159,7 +159,7 @@ func (t *OCRContractTracker) HandleLog(lb log.Broadcast, err error) {
 		return
 	}
 
-	// TODO: Transactional
+	// TODO: Transactional?
 	was, err := lb.WasAlreadyConsumed()
 	if err != nil {
 		t.logger.Errorw("OCRContract: could not determine if log was already consumed", "error", err)

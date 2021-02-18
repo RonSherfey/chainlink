@@ -16,5 +16,6 @@ func (sub *OCRContractConfigSubscription) Configs() <-chan ocrtypes.ContractConf
 	return sub.chConfigs
 }
 
-// Close is a no-op since Subscribing/Unsubscribing is handled TODO
+// Close is a no-op since Subscribing/Unsubscribing is handled in the
+// Start/Close methods of the OCRContractTracker
 func (sub *OCRContractConfigSubscription) Close() { return }
